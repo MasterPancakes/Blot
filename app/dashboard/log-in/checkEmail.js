@@ -6,6 +6,10 @@ module.exports = function checkEmail(req, res, next) {
 
   if (!email) return next(new LogInError("NOEMAIL"));
 
+  if (email.length < 5 || email.length > 100) {
+    return next(new LogInError("INVALIDEMAIL"));
+  }
+
   res.locals.email = email;
 
   User.getByEmail(email, function (err, user) {

@@ -1,4 +1,3 @@
-// Error Messages
 var BAD_CHARGE =
   "We were unable to charge your card. Please fill out the form and try again, it should work.";
 var NO_EMAIL = "Please enter an email address";
@@ -70,6 +69,10 @@ function validateEmail (req, res, next) {
   email = email.trim().toLowerCase();
 
   if (!email) return next(new Error(NO_EMAIL));
+
+  if (email.length < 5 || email.length > 100) {
+    return next(new Error("INVALIDEMAIL"));
+  }
 
   User.getByEmail(email, function (err, existingUser) {
     if (err) return next(err);
@@ -171,6 +174,14 @@ passwordForm.post(parse, csrf, function (req, res, next) {
   if (!email) return next(new Error("Please choose an email address"));
 
   if (!password) return next(new Error("Please choose a password"));
+
+  if (email.length < 5 || email.length > 100) {
+    return next(new Error("INVALIDEMAIL"));
+  }
+
+  if (password.length < 8 || password.length > 100) {
+    return next(new Error("INVALIDPASSWORD"));
+  }
 
   User.hashPassword(password, function (err, passwordHash) {
     if (err) return next(err);
