@@ -25,5 +25,7 @@ services:
       - ../notes:/usr/src/app/notes
       - ../todo.txt:/usr/src/app/todo.txt
       - ../.git:/usr/src/app/.git
+      - ../app/documentation:/usr/src/app/app/documentation
+      - ../app/dashboard:/usr/src/app/app/dashboard
     command: >
-      sh -c "rm -rf /usr/src/app/data && mkdir /usr/src/app/data && node tests $TEST_PATH"
+      sh -c "rm -rf /usr/src/app/data && mkdir /usr/src/app/data && npm run build:documentation && npm run build:dashboard && node tests $TEST_PATH"

@@ -118,7 +118,20 @@ COPY ./tests ./tests
 # replaced with a better solution in the future
 COPY .git .git
 
-## Stage 5 (default, production)
+## Stage 5 (documentation and dashboard build)
+# This stage builds the documentation and dashboard views
+FROM source as docs-dashboard
+
+WORKDIR /usr/src/app
+
+# Copy the documentation and dashboard directories
+COPY ./app/documentation ./app/documentation
+COPY ./app/dashboard ./app/dashboard
+
+# Build the documentation and dashboard views
+RUN npm run build:documentation && npm run build:dashboard
+
+## Stage 6 (default, production)
 # The final production stage
 FROM source as prod
 
