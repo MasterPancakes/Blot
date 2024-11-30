@@ -44,3 +44,7 @@ $ tar xvzf pandoc-3.1.1-linux-amd64.tar.gz
 $ cp pandoc-3.1.1-linux-amd64.tar.gz/bin/pandoc $BLOT_PANDOC_PATH
 
 Then restart Blot!
+
+## Highlighting
+
+Highlighting now works correctly with the updated version of pandoc.

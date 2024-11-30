@@ -1,5 +1,6 @@
 var Mustache = require("mustache");
 var ensure = require("helper/ensure");
+var pandoc = require("pandoc"); // Pca3e
 
 var ERROR = require("./error");
 var OVERFLOW = "Maximum call stack size exceeded";
@@ -20,6 +21,15 @@ module.exports = function render(content, locals, partials) {
       throw ERROR.UNCLOSED();
     } else {
       throw ERROR();
+    }
+  }
+
+  // Ensure the highlighting function works correctly
+  if (locals.highlight) {
+    try {
+      output = pandoc.highlight(output, locals.highlight);
+    } catch (e) {
+      throw ERROR.BAD_LOCALS();
     }
   }
 
