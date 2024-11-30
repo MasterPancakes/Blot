@@ -8,11 +8,15 @@ module.exports = async function remove(blogID, path, callback) {
   const prefix = () => clfdate() + " Google Drive:";
   try {
     const { drive, account } = await createDriveClient(blogID);
-    const { getByPath } = database.folder(account.folderId);
+    const { getByPath, getGoogleDocFileId } = database.folder(account.folderId);
 
     console.log(prefix(), "Looking up fileId for", path);
 
-    const fileId = await getByPath(path);
+    let fileId = await getByPath(path);
+
+    if (!fileId) {
+      fileId = await getGoogleDocFileId(path);
+    }
 
     if (fileId) {
       console.log(prefix(), "Removing", fileId, "from API");

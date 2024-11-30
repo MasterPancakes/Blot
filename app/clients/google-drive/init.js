@@ -1,8 +1,3 @@
-// IMPORTANT:
-//
-// If you make changes to this you will need to run sudo stop blot
-// && sudo start blot when you deploy. Simply restarting won't work.
-
 const debug = require("debug")("blot:clients:google-drive");
 const clfdate = require("helper/clfdate");
 const database = require("./database");

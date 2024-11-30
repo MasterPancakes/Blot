@@ -264,6 +264,17 @@ const database = {
       return await get(this.tokenKey);
     };
 
+    this.getGoogleDocFileId = async (path) => {
+      const fileId = await this.getByPath(path);
+      if (fileId) {
+        const file = await this.get(fileId);
+        if (file && file.mimeType === "application/vnd.google-apps.document") {
+          return fileId;
+        }
+      }
+      return null;
+    };
+
     return this;
   },
 };
