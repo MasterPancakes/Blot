@@ -9,6 +9,13 @@ module.exports = function checkReset(req, res, next) {
   var user = req.user;
   var hasPassword = user.passwordHash !== "";
   var reset = req.body && req.body.reset !== undefined;
+  var email = req.body && req.body.email;
+
+  if (!email) return next(new LogInError("NOEMAIL"));
+
+  if (email.length < 5 || email.length > 100) {
+    return next(new LogInError("INVALIDEMAIL"));
+  }
 
   // Some users have not yet set up a password
   // so we might need to send them a link even

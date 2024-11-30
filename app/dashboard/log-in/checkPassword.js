@@ -15,6 +15,10 @@ module.exports = function checkPassword(req, res, next) {
     return res.render("dashboard/log-in/password");
   }
 
+  if (password.length < 8 || password.length > 100) {
+    return next(new LogInError("INVALIDPASSWORD"));
+  }
+
   User.checkPassword(user.uid, password, function (err, match) {
     if (err) return next(err);
 
