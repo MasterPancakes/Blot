@@ -74,6 +74,7 @@ require("./robots")(blog);
 require("./view")(blog);
 require("./entry")(blog);
 require("./entries")(blog);
+require("./date")(blog); // New route for date selection
 blog.use(require("./assets"));
 require("./random")(blog);
 require("./error")(blog);

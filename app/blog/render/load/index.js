@@ -2,16 +2,6 @@ var ensure = require("helper/ensure");
 var augment = require("./augment");
 var eachEntry = require("./eachEntry");
 
-// then we check each entry in the view
-
-// we determine a new list of partials
-// and locals to retrieve based on those entries
-
-// and retrieve them
-// merging them into the view
-
-// then returning req and res
-
 module.exports = function (req, res, callback) {
   ensure(req, "object").and(res, "object").and(callback, "function");
 
@@ -25,3 +15,20 @@ module.exports = function (req, res, callback) {
     }
   );
 };
+
+function handleDateSelection(req, res, next) {
+  var fromDate, toDate;
+
+  try {
+    fromDate = req.query.from ? new Date(req.query.from) : null;
+    toDate = req.query.to ? new Date(req.query.to) : null;
+  } catch (e) {
+    fromDate = null;
+    toDate = null;
+  }
+
+  res.locals.fromDate = fromDate;
+  res.locals.toDate = toDate;
+
+  next();
+}

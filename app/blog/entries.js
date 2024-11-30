@@ -7,7 +7,7 @@ module.exports = function (server) {
   function renderPage(req, res, next) {
     var blog = req.blog;
 
-    var pageNo, pageSize;
+    var pageNo, pageSize, fromDate, toDate;
 
     try {
       pageNo = parseInt(req.params.page_number) || 1;
@@ -16,16 +16,21 @@ module.exports = function (server) {
     }
 
     try {
-      // when I remove the blog.pageSize option,
-      // consider users whove customized the page size
-      // but use a default template...
       pageSize = req.template.locals.page_size || req.blog.pageSize;
       pageSize = parseInt(pageSize) || 5;
     } catch (e) {
       pageSize = 5;
     }
 
-    Entries.getPage(blog.id, pageNo, pageSize, function (entries, pagination) {
+    try {
+      fromDate = req.query.from ? new Date(req.query.from) : null;
+      toDate = req.query.to ? new Date(req.query.to) : null;
+    } catch (e) {
+      fromDate = null;
+      toDate = null;
+    }
+
+    Entries.getPage(blog.id, pageNo, pageSize, fromDate, toDate, function (entries, pagination) {
       var pageTitle = blog.title;
 
       if (pageNo > 1) {

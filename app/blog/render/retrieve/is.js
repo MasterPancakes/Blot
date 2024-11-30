@@ -37,3 +37,29 @@ module.exports = function (req, callback) {
 
   return callback(null, is);
 };
+
+function handleDateSelection(req, callback) {
+  var fromDate, toDate;
+
+  try {
+    fromDate = req.query.from ? new Date(req.query.from) : null;
+    toDate = req.query.to ? new Date(req.query.to) : null;
+  } catch (e) {
+    fromDate = null;
+    toDate = null;
+  }
+
+  let is = {};
+
+  for (let local in req.template.locals) {
+    if (typeof req.template.locals[local] === "string") {
+      is[local] = {};
+      is[local][req.template.locals[local]] = true;
+    }
+  }
+
+  is.fromDate = fromDate;
+  is.toDate = toDate;
+
+  return callback(null, is);
+}

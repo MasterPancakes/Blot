@@ -135,3 +135,20 @@ function FormatDate(dateStamp, zone) {
     };
   };
 }
+
+function FormatDateRange(fromDate, toDate, zone) {
+  return function () {
+    return function (text, render) {
+      try {
+        text = text.trim();
+        const fromDateFormatted = fromDate ? moment.utc(fromDate).tz(zone).format(text) : "";
+        const toDateFormatted = toDate ? moment.utc(toDate).tz(zone).format(text) : "";
+        text = `${fromDateFormatted} - ${toDateFormatted}`;
+      } catch (e) {
+        text = "";
+      }
+
+      return render(text);
+    };
+  };
+}

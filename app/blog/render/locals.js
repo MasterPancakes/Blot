@@ -56,3 +56,20 @@ module.exports = function renderLocals(req, res, callback) {
 
   return callback(null, req, res);
 };
+
+function handleDateSelection(req, res, next) {
+  var fromDate, toDate;
+
+  try {
+    fromDate = req.query.from ? new Date(req.query.from) : null;
+    toDate = req.query.to ? new Date(req.query.to) : null;
+  } catch (e) {
+    fromDate = null;
+    toDate = null;
+  }
+
+  res.locals.fromDate = fromDate;
+  res.locals.toDate = toDate;
+
+  next();
+}
