@@ -24,9 +24,15 @@ done
 # we create a file system on it and mount it to the cache 
 # directory, which is used by the application and NGINX
 # to store cached rendered web pages
-mkfs -t xfs $EPHEMERAL_DISK
+mkfs -t xfs -f /dev/XXXXXXXX
 
 # If you change the cache directory, make sure to update
 # the build-config.js propert 'cache_directory'
 mkdir -p /var/instance-ssd
 mount $EPHEMERAL_DISK /var/instance-ssd
+
+# Change ownership of /var/instance-ssd/tmp to ec2-user:ec2-user
+sudo chown ec2-user:ec2-user /var/instance-ssd/tmp
+
+# Change ownership of /var/instance-ssd/logs/app.log to ec2-user:ec2-user
+sudo chown ec2-user:ec2-user /var/instance-ssd/logs/app.log
