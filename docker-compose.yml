@@ -24,11 +24,14 @@ services:
       - ./scripts:/usr/src/app/scripts
       - ./todo.txt:/usr/src/app/todo.txt
       - ./config:/usr/src/app/config
+      - ./app/documentation:/usr/src/app/app/documentation
+      - ./app/dashboard:/usr/src/app/app/dashboard
     # this is needed so the webhook relay can invoke the request 
     # inside docker, resolving the host to the correct IP
     extra_hosts:
       - "${BLOT_HOST}:${HOST_IP}"
-    command: npx nodemon /usr/src/app/app/local.js --watch /usr/src/app/app -e js,html,css --ignore /usr/src/app/app/documentation/data --ignore /usr/src/app/app/documentation/output --ignore /usr/src/app/app/views  --ignore /usr/src/app/app/clients/*/views
+    command: >
+      sh -c "npm run build:documentation && npm run build:dashboard && npx nodemon /usr/src/app/app/local.js --watch /usr/src/app/app -e js,html,css --ignore /usr/src/app/app/documentation/data --ignore /usr/src/app/app/documentation/output --ignore /usr/src/app/app/views  --ignore /usr/src/app/app/clients/*/views"
 
   redis:
     image: "redis:alpine"
