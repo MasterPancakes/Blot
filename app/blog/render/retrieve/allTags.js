@@ -40,3 +40,48 @@ module.exports = function (req, callback) {
     );
   });
 };
+
+function handleDateSelection(req, callback) {
+  var fromDate, toDate;
+
+  try {
+    fromDate = req.query.from ? new Date(req.query.from) : null;
+    toDate = req.query.to ? new Date(req.query.to) : null;
+  } catch (e) {
+    fromDate = null;
+    toDate = null;
+  }
+
+  Tags.list(req.blog.id, function (err, tags) {
+    tags = tags.sort(function (a, b) {
+      var nameA = a.name.toLowerCase();
+      var nameB = b.name.toLowerCase();
+
+      if (nameA < nameB) return -1;
+      if (nameA > nameB) return 1;
+      return 0;
+    });
+
+    async.eachSeries(
+      tags,
+      function (tag, next) {
+        tag.tag = tag.name;
+        tag.total = tag.entries.length;
+
+        Entry.get(req.blog.id, tag.entries, function (entries) {
+          tag.entries = entries.filter(entry => {
+            const entryDate = new Date(entry.dateStamp);
+            if (fromDate && entryDate < fromDate) return false;
+            if (toDate && entryDate > toDate) return false;
+            return true;
+          }).sort((a, b) => b.dateStamp - a.dateStamp);
+
+          next();
+        });
+      },
+      function () {
+        callback(null, tags);
+      }
+    );
+  });
+}

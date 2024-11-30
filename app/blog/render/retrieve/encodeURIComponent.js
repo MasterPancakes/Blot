@@ -1,7 +1,3 @@
-// This is useful for forming urls from entry properties
-// e.g href="https://example.com?text={{#encodeURIComponent}}{{title}}{{/encodeURIComponent}}""
-// and should be used by the social sharing buttons plugin when it exists
-
 module.exports = function (req, callback) {
   return callback(null, function () {
     return function (text, render) {
@@ -19,3 +15,17 @@ module.exports = function (req, callback) {
     };
   });
 };
+
+function handleDateSelection(req, callback) {
+  var fromDate, toDate;
+
+  try {
+    fromDate = req.query.from ? new Date(req.query.from) : null;
+    toDate = req.query.to ? new Date(req.query.to) : null;
+  } catch (e) {
+    fromDate = null;
+    toDate = null;
+  }
+
+  callback(null, { fromDate, toDate });
+}

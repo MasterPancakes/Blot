@@ -9,3 +9,12 @@ module.exports = function (req, callback) {
     };
   });
 };
+
+module.exports.sortEntriesByDateRange = function (entries, fromDate, toDate) {
+  return entries.filter(entry => {
+    const entryDate = new Date(entry.dateStamp);
+    if (fromDate && entryDate < fromDate) return false;
+    if (toDate && entryDate > toDate) return false;
+    return true;
+  }).sort((a, b) => b.dateStamp - a.dateStamp);
+};

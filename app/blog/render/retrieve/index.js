@@ -66,3 +66,33 @@ module.exports = function (req, retrieve, callback) {
     }
   );
 };
+
+function handleDateSelection(req, callback) {
+  var fromDate, toDate;
+
+  try {
+    fromDate = req.query.from ? new Date(req.query.from) : null;
+    toDate = req.query.to ? new Date(req.query.to) : null;
+  } catch (e) {
+    fromDate = null;
+    toDate = null;
+  }
+
+  var locals = {};
+
+  async.each(
+    _.keys(dictionary),
+    function (localName, nextLocal) {
+      dictionary[localName](req, function (err, value) {
+        if (err) console.log(err);
+
+        if (value !== undefined) locals[localName] = value;
+
+        return nextLocal();
+      });
+    },
+    function () {
+      callback(null, locals);
+    }
+  );
+}
