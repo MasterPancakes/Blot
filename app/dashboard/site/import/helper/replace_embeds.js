@@ -1,4 +1,7 @@
-module.exports = function replaceEmbeds(html, callback) {
+var cheerio = require("cheerio");
+var parse = require("url").parse;
+
+function replaceEmbeds(html, callback) {
   var $ = cheerio.load(html, { decodeEntities: false });
 
   $("iframe").each(function () {
@@ -18,5 +21,19 @@ module.exports = function replaceEmbeds(html, callback) {
     }
   });
 
+  $("audio").each(function () {
+    var src = $(this).attr("src");
+    var audio = "";
+
+    if (src) {
+      audio = parse(src).pathname;
+      audio = audio.slice(audio.lastIndexOf("/") + 1);
+
+      $(this).replaceWith("<p>![Audio](" + audio + ")</p>");
+    }
+  });
+
   return callback($.html());
-};
+}
+
+module.exports = replaceEmbeds;

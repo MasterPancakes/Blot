@@ -5,6 +5,13 @@ var pandoc = require("pandoc"); // Pca3e
 var ERROR = require("./error");
 var OVERFLOW = "Maximum call stack size exceeded";
 
+// Function to handle !Audio syntax for embedding audio
+function embedAudio(content) {
+  return content.replace(/!\[Audio\]\((.*?)\)/g, function (match, p1) {
+    return `<audio controls><source src="${p1}" type="audio/mpeg">Your browser does not support the audio element.</audio>`;
+  });
+}
+
 // This function basically wraps mustache
 // and gives me some nice error messages...
 module.exports = function render(content, locals, partials) {
@@ -32,6 +39,9 @@ module.exports = function render(content, locals, partials) {
       throw ERROR.BAD_LOCALS();
     }
   }
+
+  // Call the embedAudio function to handle !Audio syntax
+  output = embedAudio(output);
 
   return output;
 };
